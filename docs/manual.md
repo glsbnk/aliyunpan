@@ -343,20 +343,36 @@ aliyunpan upload -exn "\.jpg$" -exn "\.mp3$" C:/Users/Administrator/Video /视�
 ```
 #!/bin/bash
 
-# 是否开启调试日志
+# 是否开启调试日志 (1=开启, 0=关闭)
 export ALIYUNPAN_VERBOSE=0
-# （可选）配置目录的绝对路径（请更改成你自己的目录）
-export ALIYUNPAN_CONFIG_DIR=/Users/tickstep/Applications/adrive/config
-# aliyunpan程序所在的绝对路径（请更改成你自己的目录）
-export ALIYUNPAN_BIN=/Users/tickstep/Applications/adrive/aliyunpan
 
-# 本地目录（请更改成你自己的目录）
+# （可选）配置目录的绝对路径
+export ALIYUNPAN_CONFIG_DIR="/Users/tickstep/Applications/adrive/config"
+
+# aliyunpan程序所在的绝对路径
+export ALIYUNPAN_BIN="/Users/tickstep/Applications/adrive/aliyunpan"
+
+# 本地目录
 LOCAL_DIR="/tickstep/Documents/我的文档"
-# 网盘目录（请更改成你自己的目录）
+
+# 网盘目录
 PAN_DIR="/我的文档"
 
-# 执行上传
-$ALIYUNPAN_BIN upload -exn "^\." -exn "^@eadir$" "$LOCAL_DIR" $PAN_DIR" 
+# 检查本地目录是否存在
+if [ ! -d "$LOCAL_DIR" ]; then
+    echo "[ERROR] 本地目录不存在: $LOCAL_DIR"
+    exit 1
+fi
+
+# 执行上传（已修复引号、添加安全引用和覆盖策略）
+"$ALIYUNPAN_BIN" upload \
+    -exn "^\." \
+    -exn "^@eadir$" \
+    -ow \
+    "$LOCAL_DIR" \
+    "$PAN_DIR"
+
+echo "[INFO] 上传任务执行完毕"
 ```
 
 增加脚本执行权限
